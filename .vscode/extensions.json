@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "shaobeichen.gradient-theme",
+    "esbenp.prettier-vscode",
+    "mhutchie.git-graph",
+    "rodrigovallades.es7-react-js-snippets",
+    "ritwickdey.liveserver",
+    "bradlc.vscode-tailwindcss",
+    "vue.volar",
+    "sdras.vue-vscode-snippets",
+    "wayou.vscode-todo-highlight",
+    "k--kato.intellij-idea-keybindings",
+    "redjue.git-commit-plugin",
+    "yzhang.markdown-all-in-one",
+    "atommaterial.a-file-icon-vscode",
+    "formulahendry.auto-close-tag"
+  ]
+}

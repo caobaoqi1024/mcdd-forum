@@ -1,0 +1,80 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: "no"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - type: bind
+        source: ../sql
+        target: /docker-entrypoint-initdb.d
+        read_only: true
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+    healthcheck:
+      test: mysqladmin ping -u root -p $$MYSQL_ROOT_PASSWORD
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+  redis:
+    image: redis:7.4.2
+    restart: "no"
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+  minio:
+    image: quay.io/minio/minio
+    restart: "no"
+    ports:
+      - "9000:9000"
+      - "9002:9001"
+    environment:
+      MINIO_ROOT_USER: mcdd1024
+      MINIO_ROOT_PASSWORD: mcdd1024@pwd
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+#  elasticsearch:
+#    image: elasticsearch:8.17.2
+#    restart: "no"
+#    ports:
+#      - "9200:9200"
+#    environment:
+#      xpack.security.enabled: "false"
+#      bootstrap.memory_lock: "true"
+#      discovery.type: "single-node"
+#    healthcheck:
+#      test: curl -u --fail -s http://localhost:9200 || exit 1
+#      interval: 10s
+#      timeout: 5s
+#      start_period: 10s
+#      retries: 5
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+  rabbitmq:
+    image: rabbitmq:4.0.6
+    restart: "no"
+    ports:
+      - "5432:5432"
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    healthcheck:
+      test: rabbitmq-diagnostics -q status
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+volumes:
+  mysql_data:
+  minio_data:
