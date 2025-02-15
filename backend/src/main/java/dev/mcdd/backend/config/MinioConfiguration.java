@@ -1,29 +1,25 @@
 package dev.mcdd.backend.config;
 
+import dev.mcdd.backend.env.properties.DataMinioConfigurationProperties;
 import io.minio.MinioClient;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
-@Data
 @Configuration
-@ConfigurationProperties(prefix = "minio")
+@RequiredArgsConstructor
 public class MinioConfiguration {
 
-	private String url;
-	private String username;
-	private String password;
+	private final DataMinioConfigurationProperties properties;
 
 	@Bean
 	public MinioClient minioClient() {
-		log.info("init minio client with url {}", url);
+		log.info("init minio client...");
 		return MinioClient.builder()
-			.endpoint(url)
-			.credentials(username, password)
+			.endpoint(properties.getUrl())
+			.credentials(properties.getUsername(), properties.getPassword())
 			.build();
 	}
 

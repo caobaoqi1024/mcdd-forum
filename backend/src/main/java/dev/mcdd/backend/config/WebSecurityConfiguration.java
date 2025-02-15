@@ -1,5 +1,6 @@
 package dev.mcdd.backend.config;
 
+import dev.mcdd.backend.common.Const;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -17,7 +18,11 @@ public class WebSecurityConfiguration {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-			.anyRequest().authenticated());
+			.requestMatchers("/api/auth/**", "/error").permitAll()
+			.requestMatchers("/images/**").permitAll()
+			.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+			.requestMatchers("/api/admin/**").hasRole(Const.ROLE_ADMIN)
+			.anyRequest().hasAnyRole(Const.ROLE_DEFAULT, Const.ROLE_ADMIN));
 		http.headers(Customizer.withDefaults());
 		http.sessionManagement(Customizer.withDefaults());
 		http.formLogin(Customizer.withDefaults());
@@ -40,4 +45,6 @@ public class WebSecurityConfiguration {
 			.build());
 		return userDetailsManager;
 	}
+
+
 }
